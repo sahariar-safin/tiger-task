@@ -15,19 +15,21 @@ class AllRepositories extends StatefulWidget {
 
 class _AllRepositoriesState extends State<AllRepositories> {
   int pageNumber = 1;
-  final controller = ScrollController();
+  final scrollController = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<RepositoriesCubit>().getAllRepositories(pageNumber);
-    controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
-        context.read<RepositoriesCubit>().getRepositoriesByScroll(pageNumber + 1);
-        pageNumber = pageNumber + 1;
-      }
-    });
+    scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      context.read<RepositoriesCubit>().getRepositoriesByScroll(pageNumber + 1);
+      pageNumber = pageNumber + 1;
+    }
   }
   
   @override
@@ -44,7 +46,8 @@ class _AllRepositoriesState extends State<AllRepositories> {
             );
           } else if (state is RepositoriesCubitLoaded) {
             return ListView.builder(
-              controller: controller,
+              padding: const EdgeInsets.all(12.0),
+              controller: scrollController,
               itemCount: state.repositories.length + 1,
               itemBuilder: (context, index) {
                 if (index < state.repositories.length) {
