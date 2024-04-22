@@ -21,13 +21,13 @@ class RepositoriesModel {
 
   factory RepositoriesModel.fromJson(Map<String, dynamic> json) {
     return RepositoriesModel(
-      name: json['name'],
-      description: json['description'],
-      language: json['language'],
-      stars: json['stargazers_count'],
-      forks: json['forks_count'],
-      owner: json['owner']['login'],
-      avatar: json['owner']['avatar_url'],
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      language: json['language'] ?? '',
+      stars: json['stargazers_count'] ?? 0,
+      forks: json['forks_count'] ?? 0,
+      owner: json['owner']['login'] ?? '',
+      avatar: json['owner']['avatar_url'] ?? '',
     );
   }
 }

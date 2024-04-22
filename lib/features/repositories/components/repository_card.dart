@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tiger_task/features/repositories/models/allrepo_model.dart';
 
 class RepositoryCard extends StatelessWidget {
-  const RepositoryCard({Key? key, required this.repositoryName, required this.repositoryDescription}) : super(key: key);
+  const RepositoryCard({Key? key, required this.repository}) : super(key: key);
 
-  final String repositoryName;
-  final String repositoryDescription;
+  final RepositoriesModel repository;
 
   @override
   Widget build(BuildContext context) {
@@ -16,25 +16,28 @@ class RepositoryCard extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
       width: double.infinity,
-      child: Column(
-            children: [
-              Text(
-                repositoryName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(repositoryDescription),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/repository-details');
-                },
-                child: const Text('View Details'),
-              ),
-            ],
-          ),
+      child: ListTile(
+                    title: Text(
+                      repository.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      repository.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    isThreeLine: true,
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Stars: ${repository.stars}'),
+                        Text('Forks: ${repository.forks}'),
+                      ],
+                    ),
+                    onTap: () => Navigator.pushNamed(context, '/repository-details', arguments: repository),
+                  )
     );
   }
 }

@@ -18,4 +18,13 @@ class RepositoriesCubit extends Cubit<RepositoriesCubitState> {
       emit(RepositoriesCubitError(message: e.toString()));
     }
   }
+
+  void getRepositoriesByScroll(pageNumber) async {
+    try {
+      List<RepositoriesModel> response = await controller.fetchRepositories(pageNumber);
+      emit(RepositoriesCubitLoaded(repositories: [...repositories, ...response]));
+    } catch (e) {
+      emit(RepositoriesCubitError(message: e.toString()));
+    }
+  }
 }

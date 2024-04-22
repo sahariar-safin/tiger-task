@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tiger_task/features/repositories/components/repository_card.dart';
 import 'package:tiger_task/features/repositories/cubit/repositories_cubit.dart';
 import 'package:tiger_task/features/repositories/cubit/repositories_cubit_state.dart';
 import 'package:tiger_task/features/repositories/models/allrepo_model.dart';
@@ -13,13 +14,20 @@ class AllRepositories extends StatefulWidget {
 }
 
 class _AllRepositoriesState extends State<AllRepositories> {
-  
+  int pageNumber = 1;
+  final controller = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<RepositoriesCubit>().getAllRepositories(1);
+    context.read<RepositoriesCubit>().getAllRepositories(pageNumber);
+    controller.addListener(() {
+      if (controller.position.maxScrollExtent == controller.offset) {
+        context.read<RepositoriesCubit>().getRepositoriesByScroll(pageNumber + 1);
+        pageNumber = pageNumber + 1;
+      }
+    });
   }
   
   @override
@@ -36,28 +44,20 @@ class _AllRepositoriesState extends State<AllRepositories> {
             );
           } else if (state is RepositoriesCubitLoaded) {
             return ListView.builder(
-              itemCount: state.repositories.length,
+              controller: controller,
+              itemCount: state.repositories.length + 1,
               itemBuilder: (context, index) {
+                if (index < state.repositories.length) {
                 RepositoriesModel repository = state.repositories[index];
-                return ListTile(
-                  title: Text(
-                    repository.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                return RepositoryCard(repository:  repository);
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32.0),
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  subtitle: Text(
-                    repository.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onTap: () => Navigator.pushNamed(context, '/repository-details', arguments: repository),
-                  
-                );
-                // return RepositoryCard(
-                //   repositoryName: state.repositories[index].name,
-                //   repositoryDescription: state.repositories[index].description,
-                // );
+                  );
+                }
               },
             );
           } else if (state is RepositoriesCubitError) {
@@ -72,19 +72,3 @@ class _AllRepositoriesState extends State<AllRepositories> {
     );
   }
 }
-
-
- // body: BlocBuilder<RepositoriesController, List<dynamic>>(
-      //   builder: (context, state) {
-      //     print(state);
-      //     return ListView.builder(
-      //       itemCount: state.length,
-      //       itemBuilder: (context, index) {
-      //         return RepositoryCard(
-      //           repositoryName: state[index].name,
-      //           repositoryDescription: state[index].description,
-      //         );
-      //       },
-      //     );
-      //   },
-      // ),
