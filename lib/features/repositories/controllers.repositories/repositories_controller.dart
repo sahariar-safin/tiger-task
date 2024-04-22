@@ -1,5 +1,6 @@
 
 import 'package:tiger_task/features/repositories/models/allrepo_model.dart';
+import 'package:tiger_task/features/repositories/models/user_model.dart';
 import 'package:tiger_task/utils/http/http_client.dart';
 
 class RepositoriesController {
@@ -18,6 +19,20 @@ class RepositoriesController {
       }
       
       return repositories;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<List<RepositoriesModel>> fetchRepository(String owner, String repo) async {
+    List<RepositoriesModel> repository = [];
+
+    try {
+      var response = await THttpHelper.get('/repos/$owner/$repo');
+
+      repository = [RepositoriesModel.fromJson(response)];
+      
+      return repository;
     } catch (e) {
       throw e;
     }

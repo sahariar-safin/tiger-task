@@ -1,13 +1,15 @@
 
 
+import 'package:tiger_task/features/repositories/models/user_model.dart';
+
 class RepositoriesModel {
   final String name;
   final String description;
   final String language;
   final int stars;
   final int forks;
-  final String owner;
-  final String avatar;
+  final UserModel owner;
+  final DateTime? updated_at;
 
   RepositoriesModel({
     required this.name,
@@ -16,7 +18,7 @@ class RepositoriesModel {
     required this.stars,
     required this.forks,
     required this.owner,
-    required this.avatar,
+    this.updated_at,
   });
 
   factory RepositoriesModel.fromJson(Map<String, dynamic> json) {
@@ -26,8 +28,8 @@ class RepositoriesModel {
       language: json['language'] ?? '',
       stars: json['stargazers_count'] ?? 0,
       forks: json['forks_count'] ?? 0,
-      owner: json['owner']['login'] ?? '',
-      avatar: json['owner']['avatar_url'] ?? '',
+      owner: UserModel.fromJson(json['owner']),
+      updated_at: DateTime.parse(json['updated_at']),
     );
   }
 }

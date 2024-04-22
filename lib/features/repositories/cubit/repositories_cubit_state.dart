@@ -36,3 +36,23 @@ class RepositoriesCubitError extends RepositoriesCubitState {
   @override
   List<Object?> get props => [message];
 }
+
+class RepositoryDetailsCubitState extends Equatable {
+  const RepositoryDetailsCubitState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class RepositoryDetailsCubitInitial extends RepositoryDetailsCubitState {}
+
+class RepositoryDetailsCubitLoading extends RepositoryDetailsCubitState {}
+
+class RepositoryDetailsCubitLoaded extends RepositoryDetailsCubitState {
+  final RepositoriesModel repository;
+
+  RepositoryDetailsCubitLoaded({required this.repository});
+
+  @override
+  List<Object?> get props => [repository];
+}
