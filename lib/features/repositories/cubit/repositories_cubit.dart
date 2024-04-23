@@ -5,7 +5,7 @@ import 'package:tiger_task/features/repositories/models/allrepo_model.dart';
 
 class RepositoriesCubit extends Cubit<RepositoriesCubitState> {
   List<RepositoriesModel> repositories = [];
- RepositoriesController controller;
+  RepositoriesController controller;
   RepositoriesCubit({required this.controller}) : super(RepositoriesCubitInitial());
 
   void getAllRepositories(pageNumber) async {
@@ -22,7 +22,9 @@ class RepositoriesCubit extends Cubit<RepositoriesCubitState> {
   void getRepositoriesByScroll(pageNumber) async {
     try {
       List<RepositoriesModel> response = await controller.fetchRepositories(pageNumber);
-      emit(RepositoriesCubitLoaded(repositories: [...repositories, ...response]));
+      final oldRepositories = repositories;
+      repositories = oldRepositories + response;
+      emit(RepositoriesCubitLoaded(repositories: repositories));
     } catch (e) {
       emit(RepositoriesCubitError(message: e.toString()));
     }
